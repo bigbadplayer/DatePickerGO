@@ -16,3 +16,4 @@ User can customize the followings within an ini file:
   "dd. MMMM yyyy." => 22. July 2023.
 
   
+![DatePickerGO_anim](https://github.com/bigbadplayer/DatePickerGO/assets/20395062/7c311523-1284-4192-9a9d-0bc574fdc841)
