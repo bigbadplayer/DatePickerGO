@@ -17,7 +17,7 @@ Quick pick of a date / date-range from a pup-up GUI.
 
 "dd. MMMM yyyy." => 22. July 2023.
 
-User can customize the followings within an ini file:
+### User can customize the followings within an ini file:
 - Number of months visualized at once (max 4 rows and 3 columns).
 - Four customizable date formats. Intermittent chars between start-end dates also configurable.
 - Customizable Hotkey for the DatePicker GUI (Default: Shift+Win+D).
