@@ -1,5 +1,5 @@
 # DatePickerGO
-Quick pick a date / date-range easily from this pup-up Calendar. 
+Quick pick a date / date-range easily with this pup-up Calendar. 
 
 ![DatePickerGO_anim](https://github.com/bigbadplayer/DatePickerGO/assets/20395062/7c311523-1284-4192-9a9d-0bc574fdc841)
 
