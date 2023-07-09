@@ -1,9 +1,11 @@
 # DatePickerGO
-Quick pick of a date / date-range from a pup-up GUI. 
+Quick pick a date / date-range easily from this pup-up Calendar. 
 
 ![DatePickerGO_anim](https://github.com/bigbadplayer/DatePickerGO/assets/20395062/7c311523-1284-4192-9a9d-0bc574fdc841)
 
-
+## Introduction
+Have you ever needed to type in calendar dates? If the answer is yes, may you will be interested in trying this calendar app for easy select + insert dates / date-ranges.
+No need to search for the taskbar's calendar; because this configurable DatePicker is just a Keyboard Shortcut away from you. Past or Future? E-mail or document? No matter, just pick-and-insert.
 
 ## Features
 - Hotkey for pop-up window with DatePicker (Default: Shift+Win+D)
@@ -18,6 +20,8 @@ Quick pick of a date / date-range from a pup-up GUI.
 
 "dd. MMMM yyyy." => 22. July 2023.
 
+"LongDate" => Saturday, July 22, 2023 (specific by Windows' localization settings; more info in the ini file)
+
 ### User can customize the followings within an ini file:
 - Number of months visualized at once (max 4 rows and 3 columns).
 - Four customizable date formats. Intermittent chars between start-end dates also configurable.
@@ -31,7 +35,7 @@ Just download the .exe file and run it. It will create an ini file at first run 
 The app has a taskbar icon; right click on that to see the [Help] for the navigation infos; or for the [Options]. The latter will open an .ini file. You can find some instructions how to set up the parameters for your taste. The lines started with semicolon (;) are comment lines. Editable parameters like: ParameterName=Value. String ("not numbers") parameters needed to put in quotation marks.
 
 ## Intention and Use Cases
-I was always bad at months and days. And I need to insert dates regularly into e-mails, documents and spreadsheets during my work. Always need to check the Windows Taskbar's Calendar, then need to remember the date, then type it without any typo. Once, I've seen a VBA add-in for Excel, similar to this aproach. And I liked it very much. I wished to use it _everywhere_. Then I found a little Autohotkey script on [Thierry Dalon's Blog](https://tdalon.blogspot.com/2020/09/autohotkey-insert-date.html). That was the base of this app. I turned it into AHK v2, made possible to select ranges. I'm not a programmer, it was fun to learn Ahk through the process. Then I guessed, it would be helpful to almost anyone who use windows and sometimes need to type some dates. Then I added some 'universal' functions for those users, who don't know how to use Autohotkey. They can configure some basic functions via a simple ini file.
+I was always bad at months and days. And I need to insert dates regularly into e-mails, documents and spreadsheets during my work. Always need to check the Windows Taskbar's Calendar, then need to remember the date, then type it without any typo. Once, I've seen a VBA add-in for Excel, similar to this DatePicker approach. And I liked it very much. I wished to use it _everywhere_. Then I found a little Autohotkey script on [Thierry Dalon's Blog](https://tdalon.blogspot.com/2020/09/autohotkey-insert-date.html). That was the base of this app. I turned it into AHK v2, made possible to select ranges. I'm not a programmer, it was fun to learn Ahk through the process. Then I guessed, it would be helpful to almost anyone who use windows and sometimes need to type some dates. Then I added some 'universal' functions for those users, who don't know how to use Autohotkey. They can configure some basic functions via a simple ini file.
 The main use of this tool is the quick-date-insertion, during editing e-mails, documents, spreadsheets, web-forms, etc.
 
 I was trying to keep in mind that, there are plenty of date formats. If you are in a multi-national environment/company, you may use multiple formats simultaneously. That's why I added more than one date-format options. The fourth one is specially for managers, who thinking in week numbers.
@@ -40,4 +44,4 @@ I was trying to keep in mind that, there are plenty of date formats. If you are 
 Using beside an Open/Save window is problematic: the DatePicker grabs the focus from the Open/Save Window and when the Window Focus switch back, the whole Editor line (filename) will be overwritten by the date inserted. A possible workaround could be, if the date inserted into a notepad first, then copied into the Open/Save Window.
 
 ## Technical information
-Code written in Autohorkey v2. Source .ahk file and compiled .exe binary work on Windows. The app was tested only on Windows 10.
+Code written in Autohorkey v2. Source .ahk file (with Autohotkey v2 installed) and compiled .exe binary work on Windows. The app was tested only on Windows 10.
