@@ -5,9 +5,18 @@
 Persistent	; Run continously
 SendMode "Input"  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
-TraySetIcon(A_ScriptDir . "\DatePickerGO.ico")
 
 iniFile := "DatePickerGO.ini"
+
+FileInstall "DatePickerGO.ico", A_ScriptDir . "\DatePickerGO.ico", 0
+If not FileExist("DatePickerGO.ico")
+    {
+        CreateIni
+        Loop {
+            sleep 500
+        } until FileExist("DatePickerGO.ico")
+    }
+TraySetIcon(A_ScriptDir . "\DatePickerGO.ico")
 
 A_IconTip := "DatePickerGO  // Right click for Menu"
 A_TrayMenu.Add("[Help]", ShowHelp)
@@ -123,7 +132,7 @@ DateTimePicker(*)
 }
 
 ShowHelp(*){
-    helpMsg1 := "Current Hotkey = " . UserHotkey . "`n`n+ = Shift`n# = Win`n^ = Ctrl`n! = Alt`n`n"
+    helpMsg1 := "Version: v1.0.1.`nCurrent Hotkey = " . UserHotkey . "`n`n+ = Shift`n# = Win`n^ = Ctrl`n! = Alt`n`n"
     helpMsg2 := "
     (
         Keyboard navigation:
