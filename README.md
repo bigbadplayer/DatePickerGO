@@ -28,7 +28,7 @@ No need to search for the taskbar's calendar; because this configurable DatePick
 - Customizable Hotkey for the DatePicker GUI (Default: Shift+Win+D).
 
 ## Download
-[Latest release](https://github.com/bigbadplayer/DatePickerGO/releases/download/v1.0.0/DatePickerGO.exe "Download DatePickerGO v1.0.0")
+[Latest release](https://github.com/bigbadplayer/DatePickerGO/releases/download/v1.0.1/DatePickerGO.exe "Download DatePickerGO v1.0.1")
 
 ## Installation
 Just download the .exe file and run it. It will create an ini file at first run with Options. Then you can start right away to use the app, with the default hotkey: Shift+Win+D.
