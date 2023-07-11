@@ -27,6 +27,8 @@ No need to search for the taskbar's calendar; because this configurable DatePick
 - Four customizable date formats. Intermittent chars between start-end dates also configurable.
 - Customizable Hotkey for the DatePicker GUI (Default: Shift+Win+D).
 
+![DatePickerGO_DateFormatsHelp](https://github.com/bigbadplayer/DatePickerGO/assets/20395062/b03b0ada-d832-4fa6-9c5e-9f6db4e1f327)
+
 ## Download
 [Latest release](https://github.com/bigbadplayer/DatePickerGO/releases/download/v1.0.1/DatePickerGO.exe "Download DatePickerGO v1.0.1")
 
@@ -45,3 +47,5 @@ Using beside an Open/Save window is problematic: the DatePicker grabs the focus 
 
 ## Technical information
 Code written in Autohorkey v2. Source .ahk file (with Autohotkey v2 installed) and compiled .exe binary work on Windows. The app was tested only on Windows 10.
+
+
