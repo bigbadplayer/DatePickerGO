@@ -8,10 +8,10 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 
 iniFile := "DatePickerGO.ini"
 
-FileInstall "DatePickerGO.ico", A_ScriptDir . "\DatePickerGO.ico", 0
+;CEHECK + SET ICO
 If not FileExist("DatePickerGO.ico")
     {
-        CreateIni
+        FileInstall "DatePickerGO.ico", A_ScriptDir . "\DatePickerGO.ico", 1
         Loop {
             sleep 500
         } until FileExist("DatePickerGO.ico")
@@ -21,7 +21,11 @@ TraySetIcon(A_ScriptDir . "\DatePickerGO.ico")
 A_IconTip := "DatePickerGO  // Right click for Menu"
 A_TrayMenu.Add("[Help]", ShowHelp)
 A_TrayMenu.Add("[Options]", ShowOptions)
+A_TrayMenu.Add("[Open Calendar]",DateTimePicker)
+A_TrayMenu.default := "[Open Calendar]"
+A_TrayMenu.ClickCount := 1
 
+;INIT
 If not FileExist(iniFile)
 {
     CreateIni
@@ -29,7 +33,7 @@ If not FileExist(iniFile)
         sleep 500
     } until FileExist(iniFile)
 }
-
+    CopyAlsoToClipboard := IniRead(iniFile, "Options", "CopyAlsoToClipboard", 0)
 	rowCount := IniRead(iniFile,"Options","RowCount",1)
     if (rowCount < 1 or rowCount > 4) 
         rowCount := 1
@@ -41,39 +45,40 @@ If not FileExist(iniFile)
     DateFormat2 := IniRead(iniFile,"Options","DateFormat2","dd.MM.yyyy.")
     DateFormat3 := IniRead(iniFile,"Options","DateFormat3","MM.dd.yyyy.")
     DateFormatCWsplitChar :=  IniRead(iniFile,"Options","DateFormatCWsplitChar","/CW")
-    SplitChar := IniRead(iniFile,"Options","SplitChar","-")
+    SplitChar := IniRead(iniFile,"Options","SplitChar"," - ")
 
 Hotkey UserHotkey, DateTimePicker
 
 DateTimePicker(*)
 {
-
     DatePicker := Gui(, "DatePickerGO",)
     DatePicker.Opt("+AlwaysOnTop +ToolWindow -Resize")
     DateSelect := DatePicker.AddMonthCal("vMyCal 4 R" . rowCount . " W-" . colCount . " Multi")
     
-	InsertBtn1 := DatePicker.AddButton("x+5 h35 Default", DateFormat1 . "   [Ctrl+1]")
+	InsertBtn1 := DatePicker.AddButton("x+5 h32 Default", DateFormat1 . "   [Alt+&1]")
     InsertBtn1.OnEvent("Click", DateRoutine1)
 
-	InsertBtn2 := DatePicker.AddButton("h35", DateFormat2 . "   [Ctrl+2]")
+	InsertBtn2 := DatePicker.AddButton("h32", DateFormat2 . "   [Alt+&2]")
 	InsertBtn2.OnEvent("Click", DateRoutine2)
 
-	InsertBtn3 := DatePicker.AddButton("h35", DateFormat3 . "   [Ctrl+3]")
+	InsertBtn3 := DatePicker.AddButton("h32", DateFormat3 . "   [Alt+&3]")
 	InsertBtn3.OnEvent("Click", DateRoutine3)
 
-    InsertBtn4 := DatePicker.AddButton("h35", "yyyy" . DateFormatCWsplitChar . "week" . "   [Ctrl+4]")
+    InsertBtn4 := DatePicker.AddButton("h32", "yyyy" . DateFormatCWsplitChar . "week" . "   [Alt+&4]")
 	InsertBtn4.OnEvent("Click", DateRoutine4)
+
+    CopyOnly := DatePicker.AddCheckbox("vClipboardOnly", "&Copy to clipboard only")
 
     DatePicker.OnEvent("Close", DatePicker_Close)
     DatePicker.OnEvent("Escape", DatePicker_Close)
     DatePicker.Show()
 
      ;Context-sensitive Hotkeys
-    HotIfWinactive "DatePickerGO"
-    Hotkey "^1", DateRoutine1
-    Hotkey "^2", DateRoutine2
-    Hotkey "^3", DateRoutine3
-    Hotkey "^4", DateRoutine4
+    ; HotIfWinactive "DatePickerGO"
+    ; Hotkey "^1", DateRoutine1
+    ; Hotkey "^2", DateRoutine2
+    ; Hotkey "^3", DateRoutine3
+    ; Hotkey "^4", DateRoutine4
 
         DatePicker_Close(*)
             {
@@ -107,8 +112,18 @@ DateTimePicker(*)
                 myDate[2] := FormatTime(myDate[2], dateFormat)
                 DateInsert := myDate[1] . SplitChar . myDate[2]
             }
-             DatePicker.Destroy()
-             SendInput(DateInsert)
+             
+             if CopyOnly.Value == 1 {
+                A_Clipboard := DateInsert
+                DatePicker.Destroy()
+             }
+             else {
+                if CopyAlsoToClipboard == 1 {
+                    A_Clipboard := DateInsert
+                }
+                DatePicker.Destroy()
+                SendInput(DateInsert)
+             }
             }
 
         ;Special Case with week numbers
@@ -126,13 +141,22 @@ DateTimePicker(*)
                 myDate[2] := SubStr(myDate[2],1,4) . CWsplitChar . SubStr(myDate[2],5,2)
                 DateInsert := myDate[1] . SplitChar . myDate[2]
             }
-             DatePicker.Destroy()
-             SendInput(DateInsert)
+            if CopyOnly.Value == 1 {
+                A_Clipboard := DateInsert
+                DatePicker.Destroy()
+             }
+             else {
+                if CopyAlsoToClipboard == 1 {
+                    A_Clipboard := DateInsert
+                }
+                DatePicker.Destroy()
+                SendInput(DateInsert)
+             }
             }
 }
 
 ShowHelp(*){
-    helpMsg1 := "Version: v1.0.1.`nCurrent Hotkey = " . UserHotkey . "`n`n+ = Shift`n# = Win`n^ = Ctrl`n! = Alt`n`n"
+    helpMsg1 := "Version: v1.0.2.`nCurrent Hotkey = " . UserHotkey . "`n`n+ = Shift`n# = Win`n^ = Ctrl`n! = Alt`n`n"
     helpMsg2 := "
     (
         Keyboard navigation:
@@ -155,6 +179,8 @@ CreateIni() {
     iniContent := "
     (
     [Options]
+    ;Optionally copy the inserted date(s)to the Clipboard also. Possible values = 1 (true) / 0 (false)
+    CopyAlsoToClipboard=0
 
     ;Number of Rows of Months. Possible values = 1...4. Default =1.
     RowCount=1
@@ -175,11 +201,11 @@ CreateIni() {
     DateFormat1="yyyy.MM.dd."
     DateFormat2="yyyy/MM/dd"
     DateFormat3="LongDate"
-    DateFormatCWsplitChar="/CW"
+    DateFormatCWsplitChar=".CW"
 
-    ;Splitting character in case of date-range (like 2023.07.22.-2024.07.22.)
+    ;Splitting character in case of date-range (like 2023.07.22. - 2024.07.22.)
     ;Typical values = "-", " - ", "/", " / "
-    SplitChar="-"
+    SplitChar=" - "
 
     ; Date Formats (case sensitive)
     ; Format -- Description

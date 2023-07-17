@@ -43,9 +43,8 @@ The main use of this tool is the quick-date-insertion, during editing e-mails, d
 I was trying to keep in mind that, there are plenty of date formats. If you are in a multi-national environment/company, you may use multiple formats simultaneously. That's why I added more than one date-format options. The fourth one is specially for managers, who thinking in week numbers.
 
 ## Limitations
-Using beside an Open/Save window is problematic: the DatePicker grabs the focus from the Open/Save Window and when the Window Focus switch back, the whole Editor line (filename) will be overwritten by the date inserted. A possible workaround could be, if the date inserted into a notepad first, then copied into the Open/Save Window.
+Using beside an Open/Save window is a bit problematic: the DatePicker grabs the focus from the Open/Save Window and when the Window Focus switches back, the whole Editor line (filename) will be overwritten by the date inserted. 
+A possible workaround could be, if you check the "Copy to clipboard only" option on the calendar GUI, then paste it into the Open/Save Window.
 
 ## Technical information
 Code written in Autohorkey v2. Source .ahk file (with Autohotkey v2 installed) and compiled .exe binary work on Windows. The app was tested only on Windows 10.
-
-
