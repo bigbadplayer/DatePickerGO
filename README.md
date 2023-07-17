@@ -44,7 +44,7 @@ I was trying to keep in mind that, there are plenty of date formats. If you are 
 
 ## Limitations
 Using beside an Open/Save window is a bit problematic: the DatePicker grabs the focus from the Open/Save Window and when the Window Focus switches back, the whole Editor line (filename) will be overwritten by the date inserted. 
-A possible workaround could be, if you check the "Copy to clipboard only" option on the calendar GUI, then paste it into the Open/Save Window.
+A possible workaround could be, if you check the "Copy to clipboard only" (v1.0.2) option on the calendar GUI, then paste it into the Open/Save Window.
 
 ## Technical information
 Code written in Autohorkey v2. Source .ahk file (with Autohotkey v2 installed) and compiled .exe binary work on Windows. The app was tested only on Windows 10.
