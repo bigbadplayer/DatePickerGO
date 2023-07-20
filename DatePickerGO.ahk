@@ -1,5 +1,10 @@
 ﻿#Requires AutoHotkey v2.0
 
+;IDEAS
+;Option to add to Startup?
+;GUI menu
+;Option to turn on Notification when CopyOnlyClipboard is on?
+
 #Warn  ; Enable warnings to assist with detecting common errors.
 #SingleInstance Force	; Automatically kill older Instance, and replace it!
 Persistent	; Run continously
@@ -21,7 +26,7 @@ TraySetIcon(A_ScriptDir . "\DatePickerGO.ico")
 A_IconTip := "DatePickerGO  // Right click for Menu"
 A_TrayMenu.Add("[Help]", ShowHelp)
 A_TrayMenu.Add("[Options]", ShowOptions)
-A_TrayMenu.Add("[Open Calendar]",DateTimePicker)
+A_TrayMenu.Add("[Open Calendar]", DateTimePicker)
 A_TrayMenu.default := "[Open Calendar]"
 A_TrayMenu.ClickCount := 1
 
@@ -41,9 +46,9 @@ If not FileExist(iniFile)
     if (colCount < 1 or colCount > 3) 
         colCount := 2
     UserHotkey := IniRead(iniFile,"Options","Hotkey","+#d")
-    DateFormat1 := IniRead(iniFile,"Options","DateFormat1","yyyy.MM.dd.")
-    DateFormat2 := IniRead(iniFile,"Options","DateFormat2","dd.MM.yyyy.")
-    DateFormat3 := IniRead(iniFile,"Options","DateFormat3","MM.dd.yyyy.")
+    DateFormat1 := GetDateFormat(IniRead(iniFile,"Options","DateFormat1"))
+    DateFormat2 := GetDateFormat(IniRead(iniFile,"Options","DateFormat2"))
+    DateFormat3 := GetDateFormat(IniRead(iniFile,"Options","DateFormat3"))
     DateFormatCWsplitChar :=  IniRead(iniFile,"Options","DateFormatCWsplitChar","/CW")
     SplitChar := IniRead(iniFile,"Options","SplitChar"," - ")
 
@@ -55,16 +60,16 @@ DateTimePicker(*)
     DatePicker.Opt("+AlwaysOnTop +ToolWindow -Resize")
     DateSelect := DatePicker.AddMonthCal("vMyCal 4 R" . rowCount . " W-" . colCount . " Multi")
     
-	InsertBtn1 := DatePicker.AddButton("x+5 h32 Default", DateFormat1 . "   [Alt+&1]")
+	InsertBtn1 := DatePicker.AddButton("x+5 h32 Default", "[&1] " . DateFormat1[1] . DateFormat1[3])
     InsertBtn1.OnEvent("Click", DateRoutine1)
 
-	InsertBtn2 := DatePicker.AddButton("h32", DateFormat2 . "   [Alt+&2]")
+	InsertBtn2 := DatePicker.AddButton("h32", "[&2] " . DateFormat2[1] . DateFormat2[3])
 	InsertBtn2.OnEvent("Click", DateRoutine2)
 
-	InsertBtn3 := DatePicker.AddButton("h32", DateFormat3 . "   [Alt+&3]")
+	InsertBtn3 := DatePicker.AddButton("h32", "[&3] " . DateFormat3[1] . DateFormat3[3])
 	InsertBtn3.OnEvent("Click", DateRoutine3)
 
-    InsertBtn4 := DatePicker.AddButton("h32", "yyyy" . DateFormatCWsplitChar . "week" . "   [Alt+&4]")
+    InsertBtn4 := DatePicker.AddButton("h32", "[&4] " . "yyyy" . DateFormatCWsplitChar . "week")
 	InsertBtn4.OnEvent("Click", DateRoutine4)
 
     CopyOnly := DatePicker.AddCheckbox("vClipboardOnly", "&Copy to clipboard only")
@@ -106,10 +111,10 @@ DateTimePicker(*)
              DateInsert := ""
                 myDate := StrSplit(DateSelect.Value, "-")
              if myDate[1] = myDate[2] {
-                DateInsert := FormatTime(myDate[1], dateFormat)
+                DateInsert := FormatTime(myDate[1] . dateFormat[2], dateFormat[1])
              } else {
-                myDate[1] := FormatTime(myDate[1], dateFormat)
-                myDate[2] := FormatTime(myDate[2], dateFormat)
+                myDate[1] := FormatTime(myDate[1] . dateFormat[2], dateFormat[1])
+                myDate[2] := FormatTime(myDate[2] . dateFormat[2], dateFormat[1])
                 DateInsert := myDate[1] . SplitChar . myDate[2]
             }
              
@@ -155,6 +160,25 @@ DateTimePicker(*)
             }
 }
 
+GetDateFormat(iniFormat) {
+    DF := StrSplit(iniFormat,"|")
+    ;DF[1] = Format for FormatTime function
+    ;DF[2] = LCID
+    ;DF[3] = language note
+    switch DF.Length {
+        case 1:
+            DF.Push " LSys"         ;Formatting to defualt LCID
+            DF.Push ""              ;Empty language note
+        case 2:                     
+            DF[2] := " L" . DF[2]   ;Formatting to custom LCID
+            DF.Push ""              ;Empty language note
+        case 3:
+        DF[2] := " L" . DF[2]       ;Formatting to custom LCID    
+        DF[3] := " [" . DF[3] . "]" ;Formatting to proper language note
+    }
+    return DF
+}
+
 ShowHelp(*){
     helpMsg1 := "Version: v1.0.2.`nCurrent Hotkey = " . UserHotkey . "`n`n+ = Shift`n# = Win`n^ = Ctrl`n! = Alt`n`n"
     helpMsg2 := "
@@ -165,10 +189,12 @@ ShowHelp(*){
         Use PgUp/PgDn to move backward/forward by one month.
         Use Home/End to select the first/last day of the month.
         Calendar allows the user to shift-click or click-drag to select a range of adjacent dates.
+
         [Enter] Inserts the selected date(s) with the default date format.
-        [Ctrl] + 1 ... 4 Hotkeys inserts the pre-defined formats.
+        [1] ... [4] Hotkeys inserts the pre-defined formats.
+        [C] Turns on/off the 'Copy to clipboard only' function.
     )"
-        MsgBox helpMsg1 . helpMsg2
+        MsgBox helpMsg1 . helpMsg2, "DatePickerGO - Help"
     }
 
 ShowOptions(*) {
@@ -197,10 +223,14 @@ CreateIni() {
 
     ;You can set 4 pre-defined date formats. The first one is the default. 
     ;The fourth one is special: year with ISO 8601 week number plus a split char. Typical values = "/CW", " / CW ", "/week"
-    ;Format of the date inserted (further info below):
+    ;DateFormat of the date inserted: "Format|LCID|language note"
+    ;'Format' is the order and representation of years/months/days. Further info about letter-codes below.
+    ;'LCID' means 'Language Code Identifier'. With this option, you can change the language of months and days. You can find a list of LCID references here: https://learn.microsoft.com/en-us/openspecs/office_standards/ms-oe376/6c085406-a698-4e12-9d4d-c3b0ee3dbc4a?utm_source=pocket_reader
+    ;'language note' is just a hint for the user of the LCID code. This hint is displayed on the GUI button also. Like 'IT' (Italy) is more meningful, than '1040'.
+    ;If you omit the LCID and language note items, the name of months and days will be presented based on the system localization setting.
     DateFormat1="yyyy.MM.dd."
     DateFormat2="yyyy/MM/dd"
-    DateFormat3="LongDate"
+    DateFormat3="LongDate|1033|US"
     DateFormatCWsplitChar=".CW"
 
     ;Splitting character in case of date-range (like 2023.07.22. - 2024.07.22.)
@@ -225,6 +255,9 @@ CreateIni() {
     ; "yyyy.MM.dd." => 2023.07.22.
     ; "dd/MM/yyyy" => 22/07/2023
     ; "dd. MMMM yyyy." => 22. July 2023.
+    ; "LongDate|1031|DE" => Donnerstag, 20. Juli 2023
+    ; "LongDate|1038|HU" => 2023. július 20., csütörtök
+    ; "yyyy.MMMM.dd. (dddd)|1040|IT" => 2023.luglio.20. (giovedì)
 
     ; Standalone Formats
     ; The following formats must be used alone; that is, with no other formats or text present in the Format parameter. These formats are not case sensitive.
