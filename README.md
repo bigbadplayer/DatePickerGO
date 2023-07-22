@@ -35,6 +35,9 @@ Usage of LCID option:
 
 ![DatePickerGO_DateFormatsHelp](https://github.com/bigbadplayer/DatePickerGO/assets/20395062/b03b0ada-d832-4fa6-9c5e-9f6db4e1f327)
 
+#### v.1.0.2 screenshot:
+![DatePickerGO 1.0.2 screenshot](https://user-images.githubusercontent.com/20395062/254746801-2b7067e0-146b-4865-997a-0f1ee815a4f7.png)
+
 ## Download
 [Latest release](https://github.com/bigbadplayer/DatePickerGO/releases/download/v1.0.2/DatePickerGO-v1.0.2.zip "Download DatePickerGO v1.0.2")
 
