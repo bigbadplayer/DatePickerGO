@@ -60,20 +60,29 @@ DateTimePicker(*)
     DatePicker.Opt("+AlwaysOnTop +ToolWindow -Resize")
     DateSelect := DatePicker.AddMonthCal("vMyCal 4 R" . rowCount . " W-" . colCount . " Multi")
     
-	InsertBtn1 := DatePicker.AddButton("x+5 h32 Default", "[&1] " . DateFormat1[1] . DateFormat1[3])
+	;InsertBtn1 := DatePicker.AddButton("x+5 h30 Default Section", "[&1] " . DateFormat1[1] . DateFormat1[3])
+    InsertBtn1 := DatePicker.AddButton("x+5 h30 Default Section", "[ &1 ]")
     InsertBtn1.OnEvent("Click", DateRoutine1)
+    Date1 := DatePicker.AddText("x+5 h30 w170 YP+2", GetDate(DateFormat1))
 
-	InsertBtn2 := DatePicker.AddButton("h32", "[&2] " . DateFormat2[1] . DateFormat2[3])
+	;InsertBtn2 := DatePicker.AddButton("h30 XS Section", "[&2] " . DateFormat2[1] . DateFormat2[3])
+    InsertBtn2 := DatePicker.AddButton("h30 XS Section", "[ &2 ]")
 	InsertBtn2.OnEvent("Click", DateRoutine2)
+    Date2 := DatePicker.AddText("x+5 h30 w170 YP+2", GetDate(DateFormat2))
 
-	InsertBtn3 := DatePicker.AddButton("h32", "[&3] " . DateFormat3[1] . DateFormat3[3])
+	;InsertBtn3 := DatePicker.AddButton("h30 XS Section", "[&3] " . DateFormat3[1] . DateFormat3[3])
+    InsertBtn3 := DatePicker.AddButton("h30 XS Section", "[ &3 ]")
 	InsertBtn3.OnEvent("Click", DateRoutine3)
+    Date3 := DatePicker.AddText("x+5 h30 w170 YP+2", GetDate(DateFormat3))
 
-    InsertBtn4 := DatePicker.AddButton("h32", "[&4] " . "yyyy" . DateFormatCWsplitChar . "week")
+    ;InsertBtn4 := DatePicker.AddButton("h30 XS Section", "[&4] " . "yyyy" . DateFormatCWsplitChar . "week")
+    InsertBtn4 := DatePicker.AddButton("h30 XS Section", "[ &4 ]")
 	InsertBtn4.OnEvent("Click", DateRoutine4)
+    Date4 := DatePicker.AddText("x+5 h30 w170 YP+2", GetDateCW(DateFormatCWsplitChar))
 
-    CopyOnly := DatePicker.AddCheckbox("vClipboardOnly", "&Copy to clipboard only")
+    CopyOnly := DatePicker.AddCheckbox("vClipboardOnly XS", "&Copy to clipboard only")
 
+    DateSelect.OnEvent("Change", UpdateDates)
     DatePicker.OnEvent("Close", DatePicker_Close)
     DatePicker.OnEvent("Escape", DatePicker_Close)
     DatePicker.Show()
@@ -106,46 +115,25 @@ DateTimePicker(*)
 			DateRoutineCW(DateFormatCWsplitChar)
 		}
 
-        DateRoutine(dateFormat)
-            {
-             DateInsert := ""
-                myDate := StrSplit(DateSelect.Value, "-")
-             if myDate[1] = myDate[2] {
-                DateInsert := FormatTime(myDate[1] . dateFormat[2], dateFormat[1])
-             } else {
-                myDate[1] := FormatTime(myDate[1] . dateFormat[2], dateFormat[1])
-                myDate[2] := FormatTime(myDate[2] . dateFormat[2], dateFormat[1])
-                DateInsert := myDate[1] . SplitChar . myDate[2]
-            }
+        DateRoutine(dateFormat) {
+             DateInsert := GetDate(dateFormat)
              
              if CopyOnly.Value == 1 {
                 A_Clipboard := DateInsert
                 DatePicker.Destroy()
-             }
-             else {
+             } else {
                 if CopyAlsoToClipboard == 1 {
                     A_Clipboard := DateInsert
                 }
                 DatePicker.Destroy()
                 SendInput(DateInsert)
              }
-            }
+        }
 
         ;Special Case with week numbers
-        DateRoutineCW(CWsplitChar)
-            {
-             DateInsert := ""
-                myDate := StrSplit(DateSelect.Value, "-")
-             if myDate[1] = myDate[2] {
-                DateInsert := FormatTime(myDate[1], "YWeek") ;Result like: 200543
-                DateInsert := SubStr(DateInsert,1,4) . CWsplitChar . SubStr(DateInsert,5,2)
-             } else {
-                myDate[1] := FormatTime(myDate[1], "YWeek")
-                myDate[1] := SubStr(myDate[1],1,4) . CWsplitChar . SubStr(myDate[1],5,2)
-                myDate[2] := FormatTime(myDate[2], "YWeek")
-                myDate[2] := SubStr(myDate[2],1,4) . CWsplitChar . SubStr(myDate[2],5,2)
-                DateInsert := myDate[1] . SplitChar . myDate[2]
-            }
+        DateRoutineCW(CWsplitChar) {
+             DateInsert := GetDateCW(CWsplitChar)
+
             if CopyOnly.Value == 1 {
                 A_Clipboard := DateInsert
                 DatePicker.Destroy()
@@ -157,8 +145,58 @@ DateTimePicker(*)
                 DatePicker.Destroy()
                 SendInput(DateInsert)
              }
-            }
+        }
+
+    GetDate(dateFormat, onlyPreview?) {
+        newLine := ""
+        if IsSet(onlyPreview)
+            newLine := "`n"
+        
+        myDate := StrSplit(DateSelect.Value, "-")
+        if myDate[1] = myDate[2] {
+            return FormatTime(myDate[1] . dateFormat[2], dateFormat[1])
+        } else {
+            myDate[1] := FormatTime(myDate[1] . dateFormat[2], dateFormat[1])
+            myDate[2] := FormatTime(myDate[2] . dateFormat[2], dateFormat[1])
+            return myDate[1] . SplitChar . newLine . myDate[2]
+        }
+    }
+
+    GetDateCW(CWsplitChar, onlyPreview?) {
+        newLine := ""
+        if IsSet(onlyPreview)
+            newLine := "`n"
+        
+        myDate := StrSplit(DateSelect.Value, "-")
+        if myDate[1] = myDate[2] {
+           DateInsert := FormatTime(myDate[1], "YWeek") ;Result like: 200543
+           return SubStr(DateInsert,1,4) . CWsplitChar . SubStr(DateInsert,5,2)
+        } else {
+           myDate[1] := FormatTime(myDate[1], "YWeek")
+           myDate[1] := SubStr(myDate[1],1,4) . CWsplitChar . SubStr(myDate[1],5,2)
+           myDate[2] := FormatTime(myDate[2], "YWeek")
+           myDate[2] := SubStr(myDate[2],1,4) . CWsplitChar . SubStr(myDate[2],5,2)
+           
+           if myDate[1] = myDate[2] { ; Dates are on the same week
+                return myDate[1]
+           } else {
+                return myDate[1] . SplitChar . newLine . myDate[2]
+           }
+           
+           
+       }
+    }
+
+    UpdateDates(*) {
+        Date1.Value := GetDate(DateFormat1,"onlyPreview") ; . DateFormat1[3]
+        Date2.Value := GetDate(DateFormat2,"onlyPreview") ; . DateFormat2[3]
+        Date3.Value := GetDate(DateFormat3,"onlyPreview") ; . DateFormat3[3]
+        Date4.Value := GetDateCW(DateFormatCWsplitChar,"onlyPreview")
+    }
+
 }
+
+
 
 GetDateFormat(iniFormat) {
     DF := StrSplit(iniFormat,"|")
@@ -180,7 +218,7 @@ GetDateFormat(iniFormat) {
 }
 
 ShowHelp(*){
-    helpMsg1 := "Version: v1.0.2.`nCurrent Hotkey = " . UserHotkey . "`n`n+ = Shift`n# = Win`n^ = Ctrl`n! = Alt`n`n"
+    helpMsg1 := "Version: v1.0.3.`nCurrent Hotkey = " . formatHotkeyToHumanReadable(UserHotkey) . "`n`n"
     helpMsg2 := "
     (
         Keyboard navigation:
@@ -229,8 +267,8 @@ CreateIni() {
     ;'language note' is just a hint for the user of the LCID code. This hint is displayed on the GUI button also. Like 'IT' (Italy) is more meningful, than '1040'.
     ;If you omit the LCID and language note items, the name of months and days will be presented based on the system localization setting.
     DateFormat1="yyyy.MM.dd."
-    DateFormat2="yyyy/MM/dd"
-    DateFormat3="LongDate|1033|US"
+    DateFormat2="yyyy.MM.dd., dddd"
+    DateFormat3="LongDate|1033|EN"
     DateFormatCWsplitChar=".CW"
 
     ;Splitting character in case of date-range (like 2023.07.22. - 2024.07.22.)
@@ -274,4 +312,12 @@ CreateIni() {
     ; If you 'messed up' the ini, just delete it. The exe will generate a new one with default values.
     )"
     FileAppend(iniContent, "DatePickerGO.ini","UTF-16")
+}
+
+formatHotkeyToHumanReadable(hotkeyCode) {
+    hotkeyCode := StrReplace(hotkeyCode, "+", "Shift+")
+    hotkeyCode := StrReplace(hotkeyCode, "#", "Win+")
+    hotkeyCode := StrReplace(hotkeyCode, "^", "Ctrl+")
+    hotkeyCode := StrReplace(hotkeyCode, "!", "Alt+")
+    return hotkeyCode
 }
