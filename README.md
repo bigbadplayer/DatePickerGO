@@ -9,6 +9,7 @@ No need to search for the taskbar's calendar; because this configurable DatePick
 
 ## Features
 - Hotkey for pop-up window with DatePicker (Default: Shift+Win+D)
+- Instant preview of formatted date
 - Select Date/DateRanges with mouse click or with navigation keys on keyboard
 - Quick-insert with the default date-format with [Enter]
 - Hotkey for all four pre-configured date formats: [1]...[4]
@@ -39,7 +40,7 @@ Usage of LCID option:
 ![DatePickerGO 1.0.2 screenshot](https://user-images.githubusercontent.com/20395062/254746801-2b7067e0-146b-4865-997a-0f1ee815a4f7.png)
 
 ## Download
-[Latest release](https://github.com/bigbadplayer/DatePickerGO/releases/download/v1.0.2/DatePickerGO-v1.0.2.zip "Download DatePickerGO v1.0.2")
+[Latest release](https://github.com/bigbadplayer/DatePickerGO/releases/download/v1.0.3/DatePickerGO-v1.0.3.zip)
 
 
 ## Installation
