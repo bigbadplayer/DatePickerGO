@@ -1,7 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 
 ;IDEAS
-;Option to add to Startup?
+;Option to add to Startup?  ;FileCreateShortcut(A_ScriptFullPath, A_Startup . "\DatePickerGO.lnk",,,"DatePickerGO added to startup folder.")
 ;GUI menu
 ;Option to turn on Notification when CopyOnlyClipboard is on?
 
@@ -14,15 +14,12 @@ SetWorkingDir A_ScriptDir  ; Ensures a consistent starting directory.
 iniFile := "DatePickerGO.ini"
 
 ;CEHECK + SET ICO
-If not FileExist("DatePickerGO.ico")
-    {
-        FileInstall "DatePickerGO.ico", A_ScriptDir . "\DatePickerGO.ico", 1
-        Loop {
-            sleep 500
-        } until FileExist("DatePickerGO.ico")
-    }
-TraySetIcon(A_ScriptDir . "\DatePickerGO.ico")
-
+If not FileExist("DatePickerGO.ico") {
+    Try FileInstall "DatePickerGO.ico", A_ScriptDir . "\DatePickerGO.ico", 1
+}
+if FileExist("DatePickerGO.ico") {
+    TraySetIcon(A_ScriptDir . "\DatePickerGO.ico")
+}
 A_IconTip := "DatePickerGO  // Right click for Menu"
 A_TrayMenu.Add("[Help]", ShowHelp)
 A_TrayMenu.Add("[Options]", ShowOptions)
@@ -150,7 +147,7 @@ DateTimePicker(*)
     GetDate(dateFormat, onlyPreview?) {
         newLine := ""
         if IsSet(onlyPreview)
-            newLine := "`n"
+            newLine := "`n" ;Add a line break in GUI preview
         
         myDate := StrSplit(DateSelect.Value, "-")
         if myDate[1] = myDate[2] {
@@ -165,7 +162,7 @@ DateTimePicker(*)
     GetDateCW(CWsplitChar, onlyPreview?) {
         newLine := ""
         if IsSet(onlyPreview)
-            newLine := "`n"
+            newLine := "`n" ;Add a line break in GUI preview
         
         myDate := StrSplit(DateSelect.Value, "-")
         if myDate[1] = myDate[2] {

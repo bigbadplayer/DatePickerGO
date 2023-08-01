@@ -1,5 +1,9 @@
 # Changelog - DatePickerGO
 
+## v1.0.3 **Working on progress**
+- New: Preview of the selected date / range with the favourite date formats. The user don't need to remember the date format codes. Instead, he got a direct feedback of the result (before insertion).
+- Fix: CW formatting inserted the week number twice, even when the selected days were on the same week.
+
 ## v1.0.2
 - Mod: Change hotkey modifier key for favourites from Ctrl+Numbers to only Numbers (1 for first, 2 for second, and so on).
 - Mod: Change default SplitChar from "-" to " - " .
