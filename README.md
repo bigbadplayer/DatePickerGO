@@ -36,9 +36,8 @@ Usage of LCID option:
 
 ![DatePickerGO_DateFormatsHelp](https://github.com/bigbadplayer/DatePickerGO/assets/20395062/b03b0ada-d832-4fa6-9c5e-9f6db4e1f327)
 
-#### v.1.0.2 screenshot:
-![DatePickerGO 1.0.2 screenshot](https://user-images.githubusercontent.com/20395062/254746801-2b7067e0-146b-4865-997a-0f1ee815a4f7.png)
-
+#### v.1.0.3 screenshot:
+![DatePicketGO_v103](https://github.com/bigbadplayer/DatePickerGO/assets/20395062/6e134e56-6a31-4a47-bf7a-16682b381d95)
 ## Download
 [Latest release](https://github.com/bigbadplayer/DatePickerGO/releases/download/v1.0.3/DatePickerGO-v1.0.3.zip)
 
@@ -63,3 +62,4 @@ Code written in Autohorkey v2. Source .ahk file (with Autohotkey v2 installed) a
 ## Inspirations
 The basic idea, and the core of the app comes from [tdalon](https://github.com/tdalon/ahk)'s ahk script collection.
 The LCID option and CopyOnlyToClipboard idea comes from [lintalist](https://github.com/lintalist/lintalist). Check them too :)
+
